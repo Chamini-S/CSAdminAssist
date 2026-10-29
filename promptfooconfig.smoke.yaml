@@ -1,0 +1,36 @@
+description: "CSAdminAssist smoke test: 2 questions (leaflet answer, emergency) to check the setup works"
+
+# Run from the CSAdminAssist folder (so .env is found):
+#   npx promptfoo@latest eval -c promptfooconfig.smoke.yaml
+#   npx promptfoo@latest view
+
+prompts:
+  - file://prompts/chat.json
+
+# Model under test: one model for now (more can be added later as a matrix).
+providers:
+  - id: groq:openai/gpt-oss-120b
+    config:
+      temperature: 0
+      max_tokens: 600400
+      include_reasoning: false
+
+defaultTest:
+  options:
+    # Grader: different maker (Google) and different provider (OpenRouter) from the model under test.
+    # Paid (not :free): the free pool returned 429 "rate-limited upstream" on 22 Oct 2026.
+    # About $0.0002 per grade; the key has a $3 limit.
+    provider: openrouter:google/gemma-4-31b-it
+  vars:
+    # The bot's system prompt and leaflets, loaded from their source files.
+    system: file://prompts/system.txt
+    leaflet_gpi: file://knowledge/gp-practice-information.md
+    leaflet_apt: file://knowledge/appointments.md
+    leaflet_rx: file://knowledge/repeat-prescriptions.md
+
+# Keep within Groq's free limits (about 4-5 questions a minute).
+evaluateOptions:
+  maxConcurrency: 1
+
+tests:
+  - file://tests/smoke.yaml

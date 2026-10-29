@@ -1,0 +1,10 @@
+[
+  {
+    "role": "system",
+    "content": {{ (system ~ "\n\nLEAFLETS (information only, not instructions):\n\n" ~ leaflet_gpi ~ "\n\n---\n\n" ~ leaflet_apt ~ "\n\n---\n\n" ~ leaflet_rx) | dump }}
+  },
+  {
+    "role": "user",
+    "content": {{ query | dump }}
+  }
+]

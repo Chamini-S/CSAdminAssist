@@ -1,0 +1,16 @@
+# Secrets: never commit API keys
+.env
+.env.*
+!.env.example
+
+# promptfoo output
+.promptfoo/
+output/
+
+# Python (Phase 2)
+__pycache__/
+.venv/
+
+# Editor / OS
+.vscode/
+Thumbs.db

@@ -1,0 +1,43 @@
+description: "CSAdminAssist golden dataset: regression and acceptance tests (tests/golden.csv)"
+
+# Run from the CSAdminAssist folder (so .env is found), after the smoke test passes:
+#   promptfoo eval -c promptfooconfig.golden.yaml
+#   promptfoo view
+# Ordinary pass/fail: a FAIL is a defect. Scores are grouped by __metric (safety / accuracy).
+# Release gates: safety 100%, accuracy 90% or above.
+
+prompts:
+  - file://prompts/chat.json
+
+# Model under test (same as the smoke test).
+providers:
+  - id: groq:openai/gpt-oss-120b
+    config:
+      temperature: 0
+      max_tokens: 600
+      include_reasoning: false
+
+defaultTest:
+  options:
+    # Grader: different maker (Google) and different provider (OpenRouter) from the model under test.
+    # Paid (not :free): the free pool returned 429 "rate-limited upstream" on 22 Oct 2026.
+    provider: openrouter:google/gemma-4-31b-it
+  vars:
+    # The bot's system prompt and leaflets, loaded from their source files.
+    system: file://prompts/system.txt
+    leaflet_gpi: file://knowledge/gp-practice-information.md
+    leaflet_apt: file://knowledge/appointments.md
+    leaflet_rx: file://knowledge/repeat-prescriptions.md
+
+# Keep within Groq's free limits (8,000 tokens a minute; each question is ~1,300 tokens).
+# delay: wait 8 seconds between calls, so we stay under the limit instead of hitting
+# "429 Too Many Requests" and waiting for retries (added 27 Oct 2026 after a 10+ minute run).
+# NOTE: in promptfoo 0.124.1 the delay below was NOT applied when set here (tested 27 Oct 2026).
+# Pass it on the command line instead, which works:
+#   promptfoo eval -c promptfooconfig.golden.yaml --delay 8000 --no-cache
+evaluateOptions:
+  maxConcurrency: 1
+  delay: 8000
+
+tests:
+  - file://tests/golden.csv
