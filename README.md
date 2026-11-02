@@ -51,6 +51,9 @@ Full reports: [`findings/FINDINGS.md`](findings/FINDINGS.md)
 
 - **Golden dataset** (`tests/golden.csv`, 20 rows): realistic patient wording (typos, carers, worry),
   one behaviour per row, each with a **deterministic check plus an LLM-graded rubric**.
+- **Risk matrix** (`tests/matrix.csv`, 7 rows): one test per AI risk area: prompt injection,
+  hallucination, bias, compliance (UK GDPR, complaints), context window (an emergency buried in an
+  admin request) and human values (patient choice).
 - **Independent grader:** the bot runs on `openai/gpt-oss-120b` (Groq); answers are graded by
   `google/gemma-4-31b-it` (OpenRouter), a different maker and provider.
 - **Triage every failure:** bot defect, test defect or setup problem, before raising a bug.
@@ -62,7 +65,7 @@ Full reports: [`findings/FINDINGS.md`](findings/FINDINGS.md)
 ```
 prompts/       system.txt (the bot's rules), chat.json (prompt wrapper), CHANGELOG.md
 knowledge/     the 3 practice leaflets the bot reads
-tests/         smoke.yaml, golden.csv
+tests/         smoke.yaml, golden.csv, matrix.csv
 findings/      FINDINGS.md (bug reports)
 FACT-SHEET.md  master data the leaflets are written from (the bot never sees it)
 HAZARD-LOG.md  clinical hazards → controls → test evidence
@@ -80,6 +83,7 @@ OPENROUTER_API_KEY=...
 ```
 promptfoo eval -c promptfooconfig.smoke.yaml
 promptfoo eval -c promptfooconfig.golden.yaml --delay 8000 --no-cache
+promptfoo eval -c promptfooconfig.matrix.yaml --delay 8000 --no-cache
 promptfoo view
 ```
 
@@ -87,5 +91,5 @@ promptfoo view
 
 - **Phase 1 (now):** prompt + leaflets tested directly with promptfoo
 - **Next:** red-team suite (prompt injection, leaks), CI smoke test on every push
-- **Phase 2:** small Python RAG app, emergency guardrail, fix-and-retest of the findings
+- **Phase 2:** small Python RAG app, emergency guardrail, **pytest** tests, fix-and-retest of the findings
 - **Phase 3:** DeepEval
