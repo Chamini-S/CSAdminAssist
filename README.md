@@ -38,6 +38,10 @@ safety standards (DCB0129).
 
 Some rows have been tightened or replaced since this run (re-run pending).
 
+**Latest CI run** (3 Nov 2026, single pass, not a formal run): golden set safety 5/8, accuracy 8/12;
+risk matrix safety 2/5, accuracy 1/2. All 11 failures are logged bugs (see Findings). See
+[GitHub Actions run 41638271528](https://github.com/Chamini-S/CSAdminAssist/actions/runs/41638271528).
+
 ## Findings
 
 Full reports: [`findings/FINDINGS.md`](findings/FINDINGS.md)
