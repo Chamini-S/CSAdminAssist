@@ -106,6 +106,8 @@ promptfoo view
 
 - **Phase 1 (now):** prompt + leaflets tested directly with promptfoo
   - Done: golden set, risk matrix, findings and hazard log, CI pipeline with release gates (GitHub Actions)
-  - Next: hazard log test evidence and risk ratings, formal re-run, red-team suite (prompt injection, leaks)
-- **Phase 2:** small Python RAG app, emergency guardrail, **pytest** tests, fix-and-retest of the findings
+  - Done: hazard log test evidence and risk ratings
+  - Next: red-team suite (prompt injection, leaks)
+- **Phase 2:** formal baseline run of all suites (3 repeats each) before any fix, then small Python RAG
+  app, emergency guardrail, **pytest** tests, fix-and-retest of the findings
 - **Phase 3:** DeepEval
