@@ -1,0 +1,66 @@
+# CSAdminAssist evaluation pipeline.
+# Runs the smoke test, then the golden set and the risk matrix, then the release gates
+# (scripts/gate.py: safety 100%, accuracy >= 90%). The build fails if a gate is missed.
+#
+# Runs on every push to main, or by hand: Actions tab > "AI evals" > Run workflow.
+# API keys come from GitHub Secrets (Settings > Secrets and variables > Actions), never from the code.
+
+name: AI evals
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      PROMPTFOO_DISABLE_TELEMETRY: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Same promptfoo version as local runs, so results are comparable.
+      - name: Install promptfoo
+        run: npm install -g promptfoo@0.124.1
+
+      # If the smoke test fails, the setup is broken: stop here and don't spend API credit.
+      - name: Smoke test
+        run: |
+          mkdir -p output
+          promptfoo eval -c promptfooconfig.smoke.yaml --no-cache -o output/smoke.json
+
+      # "|| true": failed tests are expected while known bugs are open. The gate step decides
+      # pass or fail. The delay must be on the command line (the config setting is ignored).
+      - name: Golden set
+        run: promptfoo eval -c promptfooconfig.golden.yaml --delay 8000 --no-cache -o output/golden.json || true
+
+      - name: Risk matrix
+        run: promptfoo eval -c promptfooconfig.matrix.yaml --delay 8000 --no-cache -o output/matrix.json || true
+
+      - name: Release gates
+        run: python scripts/gate.py output/golden.json output/matrix.json
+
+      # Keep the full results for every run (download from the run page).
+      - name: Save results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: output/
+          retention-days: 30
