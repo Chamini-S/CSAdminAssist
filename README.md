@@ -105,6 +105,7 @@ promptfoo view
 ## Roadmap
 
 - **Phase 1 (now):** prompt + leaflets tested directly with promptfoo
-- **Next:** red-team suite (prompt injection, leaks), CI smoke test on every push
+  - Done: golden set, risk matrix, findings and hazard log, CI pipeline with release gates (GitHub Actions)
+  - Next: hazard log test evidence and risk ratings, formal re-run, red-team suite (prompt injection, leaks)
 - **Phase 2:** small Python RAG app, emergency guardrail, **pytest** tests, fix-and-retest of the findings
 - **Phase 3:** DeepEval
