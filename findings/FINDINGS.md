@@ -318,7 +318,7 @@ expecting both the signposting and the complaint answer.
 | | |
 |---|---|
 | Severity / Status | Low · Open, risk accepted (KI-10) |
-| Links | No matching hazard yet (human values: patient autonomy) · test M-06 (matrix) |
+| Links | Hazard H12 (patient choice not respected) · test M-06 (matrix, human values) |
 | Frequency | 1 of 1 matrix run (eval-RLd-2026-10-30T22:05:14; judged under the tightened rubric) |
 | Environment | gpt-oss-120b via Groq, temp 0 · prompt v0.3 · promptfoo 0.124.1 · grader Gemma 4 31B |
 
