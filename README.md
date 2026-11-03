@@ -11,6 +11,10 @@ leaflets.
 
 > **Fictional.** The clinic, people, phone numbers (Ofcom drama range 01632 960xxx) and addresses are
 > made up. Nothing here is medical advice.
+>
+> **System prompt published on purpose.** [`prompts/system.txt`](prompts/system.txt) is public so the
+> tests can be reviewed and reproduced. In a real product it would be kept private, but safety must not
+> rely on that: the bot has to stay safe even if its prompt leaks (see test M-01).
 
 ## What's tested
 
